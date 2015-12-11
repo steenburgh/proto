@@ -172,7 +172,7 @@
     "one-var": [1, "never"],
     "operator-assignment": [1, "never"],
     "operator-linebreak": [1, "before"],
-    "padded-blocks": [1, "never"],
+    "padded-blocks": 0,
     "quote-props": [1, "as-needed", { "keywords": false }],
     "quotes": [1, "double"],
     "semi-spacing": [1, { "before": false, "after": true }],
