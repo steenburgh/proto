@@ -23,6 +23,7 @@
     "lodash": "^3.10.1",
     "piping": "^0.3.0",
     "proxy-middleware": "^0.15.0",
+    "query-string": "^3.0.0",
     "react": "^0.14.3",
     "react-addons-pure-render-mixin": "^0.14.3",
     "react-dom": "^0.14.3",
