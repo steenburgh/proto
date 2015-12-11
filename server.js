@@ -9,7 +9,7 @@ const hostname = process.env.HOSTNAME || "localhost";
 const port = process.env.PORT || 8000;
 
 app.use("/build", proxy(url.parse(`http://${hostname}:${devPort}/build`)));
-app.use(serveStatic("static"));
+app.use("/static", serveStatic("static"));
 
 app.get("*", (request, response) => {
   response.sendFile("index.html", { root: __dirname });
