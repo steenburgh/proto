@@ -2,6 +2,8 @@ import "babel-polyfill";
 import "bluebird";
 import "isomorphic-fetch";
 
+import "util/SuperLodash";
+
 import createBrowserHistory from "history/lib/createBrowserHistory";
 import React from "react";
 import ReactDOM from "react-dom";

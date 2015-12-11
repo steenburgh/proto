@@ -1,8 +1,14 @@
 import React from "react";
 
+import LoginButton from "auth/components/LoginButton";
+
 const HomePage = React.createClass({
   render () {
-    return <div>Hello, Sea World!</div>;
+    return (
+      <div>
+        <LoginButton />
+      </div>
+    );
   },
 });
 
