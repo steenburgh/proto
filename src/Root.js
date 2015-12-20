@@ -1,6 +1,9 @@
 import "babel-polyfill";
-import "bluebird";
-import "isomorphic-fetch";
+import Promise from "bluebird"; // eslint-disable-line no-shadow
+
+if (window) {
+  window.Promise = Promise;
+}
 
 import createBrowserHistory from "history/lib/createBrowserHistory";
 import React from "react";
@@ -16,4 +19,4 @@ const Root = React.createClass({
   },
 });
 
-ReactDOM.render(<Root/>, document.getElementById("root"));
+ReactDOM.render(<Root />, document.getElementById("root"));
