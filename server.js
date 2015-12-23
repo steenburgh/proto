@@ -1,10 +1,11 @@
-/* eslint-disable no-var, prefer-template */
+/* eslint-disable no-var, object-shorthand, prefer-template */
 
 var express = require("express");
 
 var compression = require("compression");
+var fs = require("fs");
+var handlebars = require("handlebars");
 var proxy = require("proxy-middleware");
-var serveStatic = require("serve-static");
 var url = require("url");
 
 var NODE_ENV = process.env.NODE_ENV || "development";
@@ -19,15 +20,20 @@ var config = require("./config/server." + NODE_ENV);
 var apiUrl;
 var app;
 var devUrl;
+var indexPage;
 var server;
-var template;
+var templateFile = fs.readFileSync("./views/index.html", "utf8");
+var template = handlebars.compile(templateFile);
+
 
 app = express();
+
 
 // Sometimes calls to express get cached by the browser,
 // and apparently disabling etag fixes that?
 app.disable("etag");
 app.use(compression());
+
 
 // Optional proxy for a separate API
 if (config.API_HOST && config.API_PORT) {
@@ -38,31 +44,34 @@ if (config.API_HOST && config.API_PORT) {
   app.use("/api", proxy(apiUrl));
 }
 
-app.use("/static", serveStatic("static"));
+app.use("/static", express.static("static"));
+
 
 // During development,
 // load assets via react-hot-loader
 if (__DEV__) {
+  indexPage = template({ __DEV__: __DEV__ });
+
   devUrl = "http://" + HOST + ":" + DEV_PORT + "/build";
   devUrl = url.parse(devUrl);
 
   app.use("/build", proxy(devUrl));
 
   app.get("*", (request, response) => {
-    response.sendFile("index.html", { root: __dirname });
+    response.send(indexPage);
   });
+
 
 // TODO: In production,
 // determine asset filenames from webpack-generated stats.json
 // and inject into the entry point.
 } else {
-  template = "TODO";
-  console.log(template);
+  indexPage = template({ __DEV__: __DEV__ });
 
-  app.use("/build", serveStatic("build"));
+  app.use("/static", express.static("build"));
 
   app.get("*", (request, response) => {
-    response.sendFile("index.html", { root: __dirname });
+    response.send(indexPage);
   });
 }
 

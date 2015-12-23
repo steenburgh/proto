@@ -114,7 +114,7 @@ if (__DEV__) {
 } else {
   // IMPORTANT: StatsWriterPlugin must be last in the plugins array!
   config.plugins.push(
-    new StatsWriterPlugin({ filename: "stats.json" })
+    new StatsWriterPlugin({ filename: "../stats.json" })
   );
 }
 

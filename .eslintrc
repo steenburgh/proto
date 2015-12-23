@@ -70,7 +70,7 @@
     "consistent-return": 1,
     "curly": [1, "all"],
     "default-case": 1,
-    "dot-notation": [1, { "allowKeywords": false }],
+    "dot-notation": [1],
     "dot-location": [1, "property"],
     "eqeqeq": 1,
     "guard-for-in": 1,
