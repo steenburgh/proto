@@ -234,11 +234,11 @@
       groups: {
         lifecycle: [
           'displayName',
-          'propTypes',
-          'contextTypes',
-          'childContextTypes',
           'mixins',
           'statics',
+          'contextTypes',
+          'childContextTypes',
+          'propTypes',
           'defaultProps',
           'constructor',
           'getDefaultProps',
