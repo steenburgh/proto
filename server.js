@@ -5,21 +5,21 @@ var NODE_ENV = process.env.NODE_ENV || "development";
 var express = require("express");
 
 var compression = require("compression");
+var cookieParser = require("cookie-parser");
 var fs = require("fs");
 var handlebars = require("handlebars");
 var morgan = require("morgan");
 var proxy = require("proxy-middleware");
 var url = require("url");
 
+var createApiRouter = require("./server/ApiRouter");
 var config = require("./config/server." + NODE_ENV);
-
 
 var __DEV__ = NODE_ENV === "development";
 var DEV_PORT = process.env.DEV_PORT || 8080;
 var HOST = process.env.HOST || "localhost";
 var PORT = process.env.PORT || 8000;
 
-var apiUrl;
 var app;
 var devUrl;
 var indexPage;
@@ -35,6 +35,7 @@ app = express();
 // Sometimes calls to express get cached by the browser,
 // and apparently disabling etag fixes that?
 app.disable("etag");
+app.use(cookieParser());
 app.use(compression());
 
 
@@ -54,16 +55,9 @@ if (config.ENABLE_LOGGING) {
 }
 
 
-// Optional proxy for a separate API
-if (config.API_HOST && config.API_PORT) {
-  apiUrl = (config.API_PROTOCOL || "http") + "://" +
-    config.API_HOST + ":" + config.API_PORT;
-  apiUrl = url.parse(apiUrl);
-
-  app.use("/api", proxy(apiUrl));
-}
-
 app.use("/static", express.static("static"));
+
+app.use("/api", createApiRouter(config));
 
 
 // During development,
