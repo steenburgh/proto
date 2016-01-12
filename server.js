@@ -1,26 +1,29 @@
 /* eslint-disable no-var, object-shorthand, prefer-template */
 
+var NODE_ENV = process.env.NODE_ENV || "development";
+
 var express = require("express");
 
 var compression = require("compression");
 var fs = require("fs");
 var handlebars = require("handlebars");
+var morgan = require("morgan");
 var proxy = require("proxy-middleware");
 var url = require("url");
 
-var NODE_ENV = process.env.NODE_ENV || "development";
+var config = require("./config/server." + NODE_ENV);
+
 
 var __DEV__ = NODE_ENV === "development";
 var DEV_PORT = process.env.DEV_PORT || 8080;
 var HOST = process.env.HOST || "localhost";
 var PORT = process.env.PORT || 8000;
 
-var config = require("./config/server." + NODE_ENV);
-
 var apiUrl;
 var app;
 var devUrl;
 var indexPage;
+var logger;
 var server;
 var templateFile = fs.readFileSync("./views/index.html", "utf8");
 var template = handlebars.compile(templateFile);
@@ -33,6 +36,22 @@ app = express();
 // and apparently disabling etag fixes that?
 app.disable("etag");
 app.use(compression());
+
+
+if (config.ENABLE_LOGGING) {
+  if (__DEV__) {
+    logger = morgan("combined");
+
+  } else {
+    logger = morgan("combined", {
+      skip: function (req, res) {
+        return res.statusCode < 400;
+      },
+    });
+  }
+
+  app.use(logger);
+}
 
 
 // Optional proxy for a separate API
@@ -74,6 +93,7 @@ if (__DEV__) {
     response.send(indexPage);
   });
 }
+
 
 // For full client-side routing,
 // all page requests must be directed to the client entry point,
