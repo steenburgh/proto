@@ -115,7 +115,7 @@
     "no-warning-comments": [0, { "terms": ["todo", "fixme", "xxx"], "location": "start" }],
     "no-with": 1,
     "radix": 1,
-    "vars-on-top": 1,
+    "vars-on-top": 0,
     "wrap-iife": [1, "outside"],
     "yoda": [1, "never", { "exceptRange": true, "onlyEquality": false }],
 
