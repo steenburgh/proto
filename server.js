@@ -11,8 +11,13 @@ var morgan = require("morgan");
 var proxy = require("proxy-middleware");
 var url = require("url");
 
-var config = require("./config/server." + NODE_ENV);
+var config;
 
+try {
+  config = require("./config/server." + NODE_ENV);
+} catch (e) {
+  config = {};
+}
 
 var __DEV__ = NODE_ENV === "development";
 var DEV_PORT = process.env.DEV_PORT || 8080;
