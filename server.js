@@ -12,8 +12,15 @@ var morgan = require("morgan");
 var proxy = require("proxy-middleware");
 var url = require("url");
 
+var config;
+
+try {
+  config = require("./config/server." + NODE_ENV);
+} catch (e) {
+  config = {};
+}
+
 var createApiRouter = require("./server/ApiRouter");
-var config = require("./config/server." + NODE_ENV);
 
 var __DEV__ = NODE_ENV === "development";
 var DEV_PORT = process.env.DEV_PORT || 8080;
