@@ -139,7 +139,7 @@ function createAuthRouter (config) {
   router.post("/login", (req, res) => {
     var oauthUrl = _getOauthUrl(config);
 
-    res.redirect(oauthUrl);
+    res.json({ data: { oauth_url: oauthUrl } });
   });
 
   router.post("/logout", (req, res) => {
