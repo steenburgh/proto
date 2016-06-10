@@ -1,119 +1,17 @@
-/* eslint-disable no-var, object-shorthand, prefer-template */
+var webpack = require("webpack");
+var WebpackDevServer = require("webpack-dev-server");
+var config = require("./webpack.config");
 
-var NODE_ENV = process.env.NODE_ENV || "development";
+new WebpackDevServer(webpack(config), {
 
-var express = require("express");
+  publicPath: config.output.publicPath,
+  hot: true,
+  historyApiFallback: true
 
-var compression = require("compression");
-var fs = require("fs");
-var handlebars = require("handlebars");
-var morgan = require("morgan");
-var proxy = require("proxy-middleware");
-var url = require("url");
-
-var config;
-
-try {
-  config = require("./config/server." + NODE_ENV);
-} catch (e) {
-  config = {};
-}
-
-var __DEV__ = NODE_ENV === "development";
-var DEV_PORT = process.env.DEV_PORT || 8080;
-var HOST = process.env.HOST || "localhost";
-var PORT = process.env.PORT || 8000;
-
-var apiUrl;
-var app;
-var devUrl;
-var indexPage;
-var logger;
-var server;
-var templateFile = fs.readFileSync("./views/index.html", "utf8");
-var template = handlebars.compile(templateFile);
-
-
-app = express();
-
-
-// Sometimes calls to express get cached by the browser,
-// and apparently disabling etag fixes that?
-app.disable("etag");
-app.use(compression());
-
-
-if (config.ENABLE_LOGGING) {
-  if (__DEV__) {
-    logger = morgan("combined");
-
-  } else {
-    logger = morgan("combined", {
-      skip: function (req, res) {
-        return res.statusCode < 400;
-      },
-    });
-  }
-
-  app.use(logger);
-}
-
-
-// Optional proxy for a separate API
-if (config.API_HOST && config.API_PORT) {
-  apiUrl = (config.API_PROTOCOL || "http") + "://" +
-    config.API_HOST + ":" + config.API_PORT;
-  apiUrl = url.parse(apiUrl);
-
-  app.use("/api", proxy(apiUrl));
-}
-
-app.use("/static", express.static("static"));
-
-
-// During development,
-// load assets via react-hot-loader
-if (__DEV__) {
-  indexPage = template({ __DEV__: __DEV__ });
-
-  devUrl = "http://" + HOST + ":" + DEV_PORT + "/build";
-  devUrl = url.parse(devUrl);
-
-  app.use("/build", proxy(devUrl));
-
-  app.get("*", (request, response) => {
-    response.send(indexPage);
-  });
-
-
-// TODO: In production,
-// determine asset filenames from webpack-generated stats.json
-// and inject into the entry point.
-} else {
-  indexPage = template({ __DEV__: __DEV__ });
-
-  app.use("/static", express.static("build"));
-
-  app.get("*", (request, response) => {
-    response.send(indexPage);
-  });
-}
-
-
-// For full client-side routing,
-// all page requests must be directed to the client entry point,
-// which will then handle routing via react-router
-server = app.listen(PORT, (err) => {
+}).listen(8080, "localhost", function (err, result) {
   if (err) {
-    console.error(err);
+    return console.log(err);
   }
 
-  process.on("SIGINT", () => {
-    server.close(() => {
-      console.info("==> Exiting");
-      process.exit(0);
-    });
-  });
-
-  console.info("==> ✅ Open http://%s:%s in a browser to view the app.", HOST, PORT);
+  console.log("Listening at http://localhost:8080/");
 });

@@ -1,22 +1,16 @@
-import "babel-polyfill";
-import Promise from "bluebird"; // eslint-disable-line no-shadow
+import Promise from "bluebird";
 
 if (window) {
   window.Promise = Promise;
 }
 
-import createBrowserHistory from "history/lib/createBrowserHistory";
 import React from "react";
 import ReactDOM from "react-dom";
 
 import { renderRoutes } from "Routes";
 
-const appHistory = createBrowserHistory();
-
-const Root = React.createClass({
-  render () {
-    return renderRoutes(appHistory);
-  },
-});
+function Root () {
+  return renderRoutes();
+}
 
 ReactDOM.render(<Root />, document.getElementById("root"));

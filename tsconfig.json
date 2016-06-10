@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "jsx": "React",
+        "module": "ES6",
+        "pretty": true,
+        "sourceMap": true,
+        "target": "ES6"
+    },
+    "awesomeTypescriptLoaderOptions": {
+        "useBabel": true,
+        "useCache": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
