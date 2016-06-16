@@ -39,4 +39,4 @@ A bunch of default stuff in a project, because it's hard to remember all of this
   1. Inside the project directory, start the development server with the following command:
     `npm start`
   1. Open up a browser and verify that the text "Hello, Sea World!" appears on the page by navigating to:
-    `http://localhost:8000`
+    `http://localhost:8080`
